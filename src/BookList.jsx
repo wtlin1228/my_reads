@@ -6,17 +6,19 @@ class BookList extends React.Component {
 
   };
 
-  componentDidMount () {
-    console.log(this.props.bookList)
-  }
 
   render () {
     return (
       <div className="bookshelf-books">
         <ol className="books-grid">
-          {this.props.bookList.map((book) => (
-            <li>
-             <Book />
+          {this.props.list_book.map((book, index) => (
+            <li key={index}>
+             <Book
+               title={book.title}
+               author={book.authors[0]}
+               readingStatus={book.shelf}
+               Img={book.imageLinks.smallThumbnail}
+             />
             </li>
           ))}
         </ol>
