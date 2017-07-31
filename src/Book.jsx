@@ -1,6 +1,12 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 class Book extends React.Component {
+  static propTypes = {
+    book: PropTypes.object.isRequired,
+    onModeChange: PropTypes.func.isRequired
+  };
+
   handleChange = (event) => {
     if (this.props.onModeChange)
       this.props.onModeChange(this.props.book, event.target.value)
