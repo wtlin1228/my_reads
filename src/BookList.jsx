@@ -2,10 +2,6 @@ import React from 'react'
 import Book from './Book'
 
 class BookList extends React.Component {
-  state = {
-
-  };
-
   handleModeChange  = (book, mode) => {
     this.props.onModeChange(book, mode)
   };

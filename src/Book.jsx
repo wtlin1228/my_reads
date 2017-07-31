@@ -1,23 +1,14 @@
 import React from 'react'
 
 class Book extends React.Component {
-  state = {
-    info: {}
-  };
-
-  componentDidMount () {
-    this.setState({
-      info: this.props.book
-    })
-  }
-
   handleChange = (event) => {
     if (this.props.onModeChange)
-      this.props.onModeChange(this.state.info, event.target.value)
-  }
+      this.props.onModeChange(this.props.book, event.target.value)
+  };
 
   render () {
     const book = this.props.book;
+    const authors = book.authors ? book.authors : [];
 
     return (
       <div className="book">
@@ -34,7 +25,7 @@ class Book extends React.Component {
           </div>
         </div>
         <div className="book-title">{book.title}</div>
-        <div className="book-authors">{book.authors.join(', ')}</div>
+        <div className="book-authors">{authors.join(', ')}</div>
       </div>
     );
   }
