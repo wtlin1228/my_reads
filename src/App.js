@@ -3,6 +3,7 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 import BookList from './BookList'
 
+
 class BooksApp extends React.Component {
   state = {
     /**
@@ -12,22 +13,31 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
     showSearchPage: true,
-    book_list: [{title: '1'}, {title: '2'}, {title: '3'}],
-    list_current_reading: [],
-    list_want_to_read: [],
-    list_read: []
+    list_in_shelf: [],
+    list_search: []
   };
 
   componentDidMount () {
     BooksAPI.getAll().then((result) => this.setState({
-      list_current_reading: result.filter((book) => (book.shelf === 'currentlyReading')),
-      list_want_to_read: result.filter((book) => (book.shelf === 'wantToRead')),
-      list_read: result.filter((book) => (book.shelf === 'read'))
+      list_in_shelf: result
     }))
   }
 
+  handleUpdateReadingMode = (book, mode) => {
+    BooksAPI.update(book, mode);
+
+    this.setState((prevState) => ({
+      list_in_shelf: prevState.list_in_shelf.map((book_in_shelf) => {
+        if (book_in_shelf === book) {
+          book.shelf = mode;
+          return book
+        }
+        return book_in_shelf
+      })
+    }))
+  };
+
   render() {
-    console.log(this.state.list_current_reading)
     return (
       <div className="app">
         {this.state.showSearchPage ? (
@@ -48,7 +58,10 @@ class BooksApp extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              <BookList
+                list_book={this.state.list_in_shelf}
+                onModeChange={this.handleUpdateReadingMode}
+              />
             </div>
           </div>
         ) : (
@@ -61,19 +74,22 @@ class BooksApp extends React.Component {
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Currently Reading</h2>
                   <BookList
-                    list_book={this.state.list_current_reading}
+                    list_book={this.state.list_in_shelf.filter((book) => (book.shelf === 'currentlyReading'))}
+                    onModeChange={this.handleUpdateReadingMode}
                   />
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Want to Read</h2>
                   <BookList
-                    list_book={this.state.list_want_to_read}
+                    list_book={this.state.list_in_shelf.filter((book) => (book.shelf === 'wantToRead'))}
+                    onModeChange={this.handleUpdateReadingMode}
                   />
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Read</h2>
                   <BookList
-                    list_book={this.state.list_read}
+                    list_book={this.state.list_in_shelf.filter((book) => (book.shelf === 'read'))}
+                    onModeChange={this.handleUpdateReadingMode}
                   />
                 </div>
               </div>
