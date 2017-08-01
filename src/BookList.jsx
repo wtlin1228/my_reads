@@ -5,7 +5,8 @@ import Book from './Book'
 class BookList extends React.Component {
   static propTypes = {
     list_book: PropTypes.array.isRequired,
-    onModeChange: PropTypes.func.isRequired
+    onModeChange: PropTypes.func.isRequired,
+    shelf: PropTypes.string.isRequired
   };
 
   handleModeChange  = (book, mode) => {
@@ -17,7 +18,7 @@ class BookList extends React.Component {
       <div className="bookshelf-books">
         <ol className="books-grid">
           {this.props.list_book.map((book) => (
-            <li key={book.id}>
+            <li key={book.id + this.props.shelf}>
              <Book
                book={book}
                onModeChange={this.handleModeChange}

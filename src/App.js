@@ -13,7 +13,6 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: true,
     list_in_shelf: [],
     list_search: [],
     search_options: ['Android', 'Art', 'Artificial Intelligence', 'Astronomy', 'Austen', 'Baseball', 'Basketball', 'Bhagat', 'Biography', 'Brief', 'Business', 'Camus', 'Cervantes', 'Christie', 'Classics', 'Comics', 'Cook', 'Cricket', 'Cycling', 'Desai', 'Design', 'Development', 'Digital Marketing', 'Drama', 'Drawing', 'Dumas', 'Education', 'Everything', 'Fantasy', 'Film', 'Finance', 'First', 'Fitness', 'Football', 'Future', 'Games', 'Gandhi', 'History', 'History', 'Homer', 'Horror', 'Hugo', 'Ibsen', 'Journey', 'Kafka', 'King', 'Lahiri', 'Larsson', 'Learn', 'Literary Fiction', 'Make', 'Manage', 'Marquez', 'Money', 'Mystery', 'Negotiate', 'Painting', 'Philosophy', 'Photography', 'Poetry', 'Production', 'Program Javascript', 'Programming', 'React', 'Redux', 'River', 'Robotics', 'Rowling', 'Satire', 'Science Fiction', 'Shakespeare', 'Singh', 'Swimming', 'Tale', 'Thrun', 'Time', 'Tolstoy', 'Travel', 'Ultimate', 'Virtual Reality', 'Web Development', 'iOS']
@@ -51,7 +50,7 @@ class BooksApp extends React.Component {
 
   handleAddBook = (book, mode) => {
     BooksAPI.update(book, mode);
-
+    
     book.shelf = mode;
     this.setState({
       list_in_shelf: this.state.list_in_shelf.concat(book)
@@ -82,6 +81,7 @@ class BooksApp extends React.Component {
               <BookList
                 list_book={this.state.list_search}
                 onModeChange={this.handleAddBook}
+                shelf="none"
               />
             </div>
           </div>
@@ -98,6 +98,7 @@ class BooksApp extends React.Component {
                   <BookList
                     list_book={this.state.list_in_shelf.filter((book) => (book.shelf === 'currentlyReading'))}
                     onModeChange={this.handleUpdateReadingMode}
+                    shelf="currentlyReading"
                   />
                 </div>
                 <div className="bookshelf">
@@ -105,6 +106,7 @@ class BooksApp extends React.Component {
                   <BookList
                     list_book={this.state.list_in_shelf.filter((book) => (book.shelf === 'wantToRead'))}
                     onModeChange={this.handleUpdateReadingMode}
+                    shelf="wantToRead"
                   />
                 </div>
                 <div className="bookshelf">
@@ -112,6 +114,7 @@ class BooksApp extends React.Component {
                   <BookList
                     list_book={this.state.list_in_shelf.filter((book) => (book.shelf === 'read'))}
                     onModeChange={this.handleUpdateReadingMode}
+                    shelf="read"
                   />
                 </div>
               </div>
