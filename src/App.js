@@ -24,28 +24,39 @@ class BooksApp extends React.Component {
     }))
   }
 
+  checkInShelf = (book) => {
+    if (this.state.list_in_shelf.find(b => b.id === book.id) ){
+      book.shelf = this.state.list_in_shelf.find(b => b.id === book.id).shelf
+    }
+    return book
+  };
+
   handleSearchChange = (e) => {
     if (this.state.search_options.includes(e.target.value)) {
-      console.log(e.target.value);
       BooksAPI.search(e.target.value, 20).then((result) => this.setState({
-        list_search: result
+        list_search: result.map((b) => {
+          return this.checkInShelf(b)
+        })
       }))
     }
-
   };
 
   handleUpdateReadingMode = (book, mode) => {
-    BooksAPI.update(book, mode);
+    if (book.shelf !== mode) {
+      BooksAPI.update(book, mode).then(() => {
+        book.shelf = mode;
 
-    this.setState((prevState) => ({
-      list_in_shelf: prevState.list_in_shelf.map((book_in_shelf) => {
-        if (book_in_shelf === book) {
-          book.shelf = mode;
-          return book
-        }
-        return book_in_shelf
+        this.setState(prevState => ({
+          list_in_shelf: prevState.list_in_shelf.filter(b => b.id !== book.id).concat([ book ]),
+          list_search: prevState.list_search.map( b => {
+            if (book.id === b.id) {
+              b.shelf = mode
+            }
+            return b
+          })
+        }))
       })
-    }))
+    }
   };
 
   handleAddBook = (book, mode) => {
@@ -53,7 +64,7 @@ class BooksApp extends React.Component {
     
     book.shelf = mode;
     this.setState({
-      list_in_shelf: this.state.list_in_shelf.concat(book)
+      list_in_shelf: this.state.list_in_shelf.filter(b => b.id !== book.id).concat([ book ])
     })
   };
 
